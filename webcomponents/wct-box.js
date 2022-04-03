@@ -82,7 +82,7 @@ template.innerHTML = `
 	  background-color: hsl(var(--hue) var(--saturation) 0%);
 	}
   </style>
-  <div class="box" style="transform: translate3d(200vw, 200vw, -200vw);">
+  <div class="box" style="transform: translate3d(1vw, 1vw, -1vw);">
 	  <div class="box-side box-top"></div>
 	  <div class="box-side box-back"></div>
 	  <div class="box-side box-front"></div>
@@ -94,6 +94,7 @@ template.innerHTML = `
 
 class WctBox extends HTMLElement {
   boxPosition = { x: 0, y: 0, z: 0 };
+  boxDimensions = { width: 1, height: 1, length: 1 };
 
   constructor() {
     super();
@@ -108,33 +109,30 @@ class WctBox extends HTMLElement {
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    if (name == "width") {
-      this.shadowRoot
-        .querySelector(".box")
-        .style.setProperty("--box-width", newValue);
+    if (["width", "height", "length"].includes(name)) {
+      this.updateBoxDimensions({ [name]: newValue });
     }
-    if (name == "height") {
-      this.shadowRoot
-        .querySelector(".box")
-        .style.setProperty("--box-height", newValue);
-    }
-    if (name == "length") {
-      this.shadowRoot
-        .querySelector(".box")
-        .style.setProperty("--box-length", newValue);
-    }
-    if (name == "x") {
-      this.updateBoxPosition({ x: newValue });
-    }
-    if (name == "y") {
-      this.updateBoxPosition({ y: newValue });
-    }
-    if (name == "z") {
-      this.updateBoxPosition({ z: newValue });
+    if (["x", "y", "z"].includes(name)) {
+      this.updateBoxPosition({ [name]: newValue });
     }
     if (name == "hue") {
       this.updateBoxProperties({ "--hue": newValue });
     }
+  }
+
+  updateBoxDimensions(dimensionsChanges) {
+    this.boxDimensions = {
+      ...this.boxDimensions,
+      ...dimensionsChanges,
+    };
+
+    Object.entries(this.boxDimensions).forEach(
+      ([dimensionName, dimensionValue]) =>
+        this.setBoxStyleProperty(
+          `--box-${dimensionName}`,
+          `${dimensionValue}vw`
+        )
+    );
   }
 
   updateBoxPosition(positionChanges) {
@@ -143,20 +141,20 @@ class WctBox extends HTMLElement {
       ...positionChanges,
     };
 
-    this.shadowRoot
-      .querySelector(".box")
-      .style.setProperty(
-        "transform",
-        `translate3d(${this.boxPosition.x}, ${this.boxPosition.y}, ${this.boxPosition.z})`
-      );
+    this.setBoxStyleProperty(
+      "transform",
+      `translate3d(${this.boxPosition.x}vw, ${this.boxPosition.y}vw, ${this.boxPosition.z}vw)`
+    );
   }
 
   updateBoxProperties(properties) {
     Object.entries(properties).forEach(([propName, propValue]) =>
-      this.shadowRoot
-        .querySelector(".box")
-        .style.setProperty(propName, propValue)
+      this.setBoxStyleProperty(propName, propValue)
     );
+  }
+
+  setBoxStyleProperty(property, value) {
+    this.shadowRoot.querySelector(".box").style.setProperty(property, value);
   }
 }
 

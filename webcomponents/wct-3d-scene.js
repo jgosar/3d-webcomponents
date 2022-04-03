@@ -60,14 +60,9 @@ class Wct3dScene extends HTMLElement {
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    if (name == "camera-x") {
-      this.updateCameraPosition({ x: newValue });
-    }
-    if (name == "camera-y") {
-      this.updateCameraPosition({ y: newValue });
-    }
-    if (name == "camera-z") {
-      this.updateCameraPosition({ z: newValue });
+    if (["camera-x", "camera-y", "camera-z"].includes(name)) {
+      const dimension = name.split("-")[1];
+      this.updateCameraPosition({ [dimension]: newValue });
     }
   }
 
@@ -83,9 +78,9 @@ class Wct3dScene extends HTMLElement {
         "transform",
         `translate3d(${this.negateNumber(
           this.cameraPosition.x
-        )}, ${this.negateNumber(this.cameraPosition.y)}, ${this.negateNumber(
-          this.cameraPosition.z
-        )})`
+        )}vw, ${this.negateNumber(
+          this.cameraPosition.y
+        )}vw, ${this.negateNumber(this.cameraPosition.z)}vw)`
       );
   }
 
