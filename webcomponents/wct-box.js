@@ -4,6 +4,10 @@ template.innerHTML = `
 	html {
 	  transform-style: preserve-3d;
 	}
+
+  .animated {
+    transition: 1s;
+  }
 	
 	.box {
 	  transform-style: preserve-3d;
@@ -82,7 +86,7 @@ template.innerHTML = `
 	  background-color: hsl(var(--hue) var(--saturation) 0%);
 	}
   </style>
-  <div class="box" style="transform: translate3d(1vw, 1vw, -1vw);">
+  <div class="box animated" style="transform: translate3d(1vw, 1vw, -1vw);">
 	  <div class="box-side box-top"></div>
 	  <div class="box-side box-back"></div>
 	  <div class="box-side box-front"></div>
@@ -102,6 +106,8 @@ class WctBox extends HTMLElement {
     this.attachShadow({ mode: "open" });
 
     this.shadowRoot.appendChild(template.content.cloneNode(true));
+    this.updateBoxDimensions({});
+    this.updateBoxPosition({});
   }
 
   static get observedAttributes() {
