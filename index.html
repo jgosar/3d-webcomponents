@@ -1,0 +1,31 @@
+<html>
+  <head>
+    <title>3D Web components</title>
+    <script src="webcomponents/wct-box.js"></script>
+    <script src="webcomponents/wct-3d-scene.js"></script>
+    <script src="helpers/3d-helpers.js"></script>
+    <script src="index.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+  </head>
+  <body>
+    <wct-3d-scene camera-x="2.5vw" camera-y="-2vw" camera-z="5vw">
+      <wct-box
+        x="0vw"
+        y="0vw"
+        z="0vw"
+        width="1vw"
+        height="1vw"
+        length="1vw"
+      ></wct-box>
+      <wct-box
+        x="1vw"
+        y="1vw"
+        z="-1vw"
+        width="1vw"
+        height="1vw"
+        length="1vw"
+        hue="10"
+      ></wct-box>
+    </wct-3d-scene>
+  </body>
+</html>
