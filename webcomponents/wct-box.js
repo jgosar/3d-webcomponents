@@ -97,6 +97,7 @@ template.innerHTML = `
 `;
 
 class WctBox extends HTMLElement {
+  BOX_SIDES = ["front", "back", "top", "bottom", "left", "right"];
   boxPosition = { x: 0, y: 0, z: 0 };
   boxDimensions = { width: 1, height: 1, length: 1 };
 
@@ -106,12 +107,13 @@ class WctBox extends HTMLElement {
     this.attachShadow({ mode: "open" });
 
     this.shadowRoot.appendChild(template.content.cloneNode(true));
+    this.createBoxSides();
     this.updateBoxDimensions({});
     this.updateBoxPosition({});
   }
 
   static get observedAttributes() {
-    return ["width", "height", "length", "x", "y", "z", "hue"];
+    return ["width", "height", "length", "x", "y", "z", "hue", "onclick"];
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
@@ -156,6 +158,29 @@ class WctBox extends HTMLElement {
   updateBoxProperties(properties) {
     Object.entries(properties).forEach(([propName, propValue]) =>
       this.setBoxStyleProperty(propName, propValue)
+    );
+  }
+
+  createBoxSides() {
+    const boxElement = this.shadowRoot.querySelector(".box");
+    this.BOX_SIDES.forEach((boxSide) => {
+      const sideElement = document.createElement("div");
+      sideElement.classList.add("box-side");
+      sideElement.classList.add(`box-${boxSide}`);
+      sideElement.addEventListener("click", () => this.emitClickEvent(boxSide));
+      boxElement.appendChild(sideElement);
+    });
+  }
+
+  emitClickEvent(side) {
+    this.dispatchEvent(
+      new CustomEvent("box-side-click", {
+        bubbles: true,
+        composed: true,
+        detail: {
+          side,
+        },
+      })
     );
   }
 
