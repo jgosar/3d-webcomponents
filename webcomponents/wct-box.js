@@ -87,12 +87,6 @@ template.innerHTML = `
 	}
   </style>
   <div class="box animated" style="transform: translate3d(1vw, 1vw, -1vw);">
-	  <div class="box-side box-top"></div>
-	  <div class="box-side box-back"></div>
-	  <div class="box-side box-front"></div>
-	  <div class="box-side box-right"></div>
-	  <div class="box-side box-left"></div>
-	  <div class="box-side box-bottom"></div>
 	</div>
 `;
 
