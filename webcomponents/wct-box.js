@@ -86,7 +86,7 @@ template.innerHTML = `
 	  background-color: hsl(var(--hue) var(--saturation) 0%);
 	}
   </style>
-  <div class="box animated" style="transform: translate3d(1vw, 1vw, -1vw);">
+  <div class="box animated" style="transform: translate3d(1em, 1em, -1em);">
 	</div>
 `;
 
@@ -132,7 +132,7 @@ class WctBox extends HTMLElement {
       ([dimensionName, dimensionValue]) =>
         this.setBoxStyleProperty(
           `--box-${dimensionName}`,
-          `${dimensionValue}vw`
+          `${dimensionValue}em`
         )
     );
   }
@@ -145,7 +145,7 @@ class WctBox extends HTMLElement {
 
     this.setBoxStyleProperty(
       "transform",
-      `translate3d(${this.boxPosition.x}vw, ${this.boxPosition.y}vw, ${this.boxPosition.z}vw)`
+      `translate3d(${this.boxPosition.x}em, ${this.boxPosition.y}em, ${this.boxPosition.z}em)`
     );
   }
 

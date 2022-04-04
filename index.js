@@ -12,7 +12,7 @@ window.onload = function () {
 
 function renderBoxes() {
   const sceneElement = document.getElementById("scene");
-  sceneElement.innerHtml = "";
+  sceneElement.textContent = "";
   boxes.forEach((box) => {
     const boxElement = document.createElement("wct-box");
     Object.entries(box).forEach(([attrName, attrValue]) =>

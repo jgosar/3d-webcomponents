@@ -78,9 +78,9 @@ class Wct3dScene extends HTMLElement {
         "transform",
         `translate3d(${this.negateNumber(
           this.cameraPosition.x
-        )}vw, ${this.negateNumber(
+        )}em, ${this.negateNumber(
           this.cameraPosition.y
-        )}vw, ${this.negateNumber(this.cameraPosition.z)}vw)`
+        )}em, ${this.negateNumber(this.cameraPosition.z)}em)`
       );
   }
 
