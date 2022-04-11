@@ -1,4 +1,4 @@
-const boxes = [
+let boxes = [
   { x: 0, y: 0, z: 0 },
   { x: 1, y: 1, z: -1, hue: 10 },
   { x: 2, y: 1, z: -1, hue: 120 },
@@ -26,8 +26,13 @@ function renderBoxes() {
 }
 
 function boxclick(box, event) {
-  const newBox = getNewBoxProps(box, event.detail.side);
-  boxes.push(newBox);
+  const action = event.detail.mouseButton === "right" ? "add" : "remove";
+  if (action === "add") {
+    const newBox = getNewBoxProps(box, event.detail.side);
+    boxes.push(newBox);
+  } else {
+    boxes = boxes.filter((arrayBox) => arrayBox !== box);
+  }
   renderBoxes();
 }
 

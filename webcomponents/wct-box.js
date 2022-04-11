@@ -161,21 +161,29 @@ class WctBox extends HTMLElement {
       const sideElement = document.createElement("div");
       sideElement.classList.add("box-side");
       sideElement.classList.add(`box-${boxSide}`);
-      sideElement.addEventListener("click", () => this.emitClickEvent(boxSide));
+      sideElement.addEventListener("click", (event) =>
+        this.emitClickEvent(event, boxSide, "left")
+      );
+      sideElement.addEventListener("contextmenu", (event) =>
+        this.emitClickEvent(event, boxSide, "right")
+      );
       boxElement.appendChild(sideElement);
     });
   }
 
-  emitClickEvent(side) {
+  emitClickEvent(event, side, mouseButton) {
+    event.preventDefault();
     this.dispatchEvent(
       new CustomEvent("box-side-click", {
         bubbles: true,
         composed: true,
         detail: {
           side,
+          mouseButton,
         },
       })
     );
+    return false;
   }
 
   setBoxStyleProperty(property, value) {
