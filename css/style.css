@@ -6,3 +6,14 @@ wct-box {
   transform-style: preserve-3d;
   display: block;
 }
+
+wct-floor {
+  transform-style: preserve-3d;
+  display: block;
+  position: absolute;
+}
+
+.three-d-container {
+  transform-style: preserve-3d;
+  display: block;
+}

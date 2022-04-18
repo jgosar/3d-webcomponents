@@ -107,7 +107,7 @@ class WctBox extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return ["width", "height", "length", "x", "y", "z", "hue", "onclick"];
+    return ["width", "height", "length", "x", "y", "z", "hue"];
   }
 
   attributeChangedCallback(name, oldValue, newValue) {

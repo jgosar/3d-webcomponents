@@ -1,5 +1,5 @@
-const template2 = document.createElement("template");
-template2.innerHTML = `
+const wct3dSceneTemplate = document.createElement("template");
+wct3dSceneTemplate.innerHTML = `
 	<style>
 		.wrapper {
 		  --perspective: 50vw;
@@ -51,7 +51,7 @@ class Wct3dScene extends HTMLElement {
 
     this.attachShadow({ mode: "open" });
 
-    this.shadowRoot.appendChild(template2.content.cloneNode(true));
+    this.shadowRoot.appendChild(wct3dSceneTemplate.content.cloneNode(true));
     this.updateCameraPosition({});
   }
 
