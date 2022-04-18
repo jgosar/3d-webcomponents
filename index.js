@@ -8,7 +8,11 @@ let boxes = [
 
 let floor = { x: 0, z: 0, width: 5, length: 3 };
 
+let camera = { x: 1.5, y: -3, z: 5, angleX: 0, angleY: 0 };
+let POSITION_INTERVAL = 0.5;
+
 window.onload = function () {
+  setupKeyListeners();
   renderBoxes();
   renderFloor();
 };
@@ -81,4 +85,32 @@ function getNewBoxProps(parentBox, side) {
         ? parentBox.z - 1
         : parentBox.z,
   };
+}
+
+function updateCameraPosition(changes) {
+  const sceneElement = document.getElementById("scene");
+  Object.entries(changes).forEach(([attrName, attrValue]) => {
+    if (["x", "y", "z"].includes(attrName)) {
+      camera[attrName] = attrValue;
+      sceneElement.setAttribute(`camera-${attrName}`, attrValue);
+    }
+  });
+}
+
+function setupKeyListeners() {
+  document.addEventListener("keyup", (e) => {
+    if (e.code === "KeyW") {
+      updateCameraPosition({ z: camera.z - POSITION_INTERVAL });
+    } else if (e.code === "KeyS") {
+      updateCameraPosition({ z: camera.z + POSITION_INTERVAL });
+    } else if (e.code === "KeyA") {
+      updateCameraPosition({ x: camera.x - POSITION_INTERVAL });
+    } else if (e.code === "KeyD") {
+      updateCameraPosition({ x: camera.x + POSITION_INTERVAL });
+    } else if (e.code === "KeyQ") {
+      updateCameraPosition({ y: camera.y - POSITION_INTERVAL });
+    } else if (e.code === "KeyY" || e.code === "KeyZ") {
+      updateCameraPosition({ y: camera.y + POSITION_INTERVAL });
+    }
+  });
 }
