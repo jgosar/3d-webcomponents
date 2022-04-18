@@ -12,6 +12,7 @@ let camera = { x: 1.5, y: -3, z: 5, angleX: 0, angleY: 0 };
 let POSITION_INTERVAL = 0.5;
 
 window.onload = function () {
+  updateCameraPosition(camera);
   setupKeyListeners();
   renderBoxes();
   renderFloor();
