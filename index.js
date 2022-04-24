@@ -10,9 +10,10 @@ let floor = { x: 0, z: 0, width: 5, length: 3 };
 
 let camera = { x: 1.5, y: -3, z: 5, angleX: 0, angleY: 0 };
 let POSITION_INTERVAL = 0.5;
+let ANGLE_INTERVAL = 5;
 
 window.onload = function () {
-  updateCameraPosition(camera);
+  updateCameraParams(camera);
   setupKeyListeners();
   renderBoxes();
   renderFloor();
@@ -88,10 +89,10 @@ function getNewBoxProps(parentBox, side) {
   };
 }
 
-function updateCameraPosition(changes) {
+function updateCameraParams(changes) {
   const sceneElement = document.getElementById("scene");
   Object.entries(changes).forEach(([attrName, attrValue]) => {
-    if (["x", "y", "z"].includes(attrName)) {
+    if (["x", "y", "z", "angleX", "angleY"].includes(attrName)) {
       camera[attrName] = attrValue;
       sceneElement.setAttribute(`camera-${attrName}`, attrValue);
     }
@@ -100,18 +101,38 @@ function updateCameraPosition(changes) {
 
 function setupKeyListeners() {
   document.addEventListener("keyup", (e) => {
-    if (e.code === "KeyW") {
-      updateCameraPosition({ z: camera.z - POSITION_INTERVAL });
-    } else if (e.code === "KeyS") {
-      updateCameraPosition({ z: camera.z + POSITION_INTERVAL });
-    } else if (e.code === "KeyA") {
-      updateCameraPosition({ x: camera.x - POSITION_INTERVAL });
-    } else if (e.code === "KeyD") {
-      updateCameraPosition({ x: camera.x + POSITION_INTERVAL });
-    } else if (e.code === "KeyQ") {
-      updateCameraPosition({ y: camera.y - POSITION_INTERVAL });
-    } else if (e.code === "KeyY" || e.code === "KeyZ") {
-      updateCameraPosition({ y: camera.y + POSITION_INTERVAL });
+    switch (e.code) {
+      case "KeyW":
+        updateCameraParams({ z: camera.z - POSITION_INTERVAL });
+        break;
+      case "KeyS":
+        updateCameraParams({ z: camera.z + POSITION_INTERVAL });
+        break;
+      case "KeyA":
+        updateCameraParams({ x: camera.x - POSITION_INTERVAL });
+        break;
+      case "KeyD":
+        updateCameraParams({ x: camera.x + POSITION_INTERVAL });
+        break;
+      case "KeyQ":
+        updateCameraParams({ y: camera.y - POSITION_INTERVAL });
+        break;
+      case "KeyY":
+      case "KeyZ":
+        updateCameraParams({ y: camera.y + POSITION_INTERVAL });
+        break;
+      case "ArrowLeft":
+        updateCameraParams({ angleY: camera.angleY - ANGLE_INTERVAL });
+        break;
+      case "ArrowRight":
+        updateCameraParams({ angleY: camera.angleY + ANGLE_INTERVAL });
+        break;
+      case "ArrowUp":
+        updateCameraParams({ angleX: camera.angleX + ANGLE_INTERVAL });
+        break;
+      case "ArrowDown":
+        updateCameraParams({ angleX: camera.angleX - ANGLE_INTERVAL });
+        break;
     }
   });
 }
