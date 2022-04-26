@@ -103,16 +103,16 @@ function setupKeyListeners() {
   document.addEventListener("keyup", (e) => {
     switch (e.code) {
       case "KeyW":
-        updateCameraParams({ z: camera.z - POSITION_INTERVAL });
+        moveOneStepInRelativeDirection(0);
         break;
       case "KeyS":
-        updateCameraParams({ z: camera.z + POSITION_INTERVAL });
+        moveOneStepInRelativeDirection(180);
         break;
       case "KeyA":
-        updateCameraParams({ x: camera.x - POSITION_INTERVAL });
+        moveOneStepInRelativeDirection(270);
         break;
       case "KeyD":
-        updateCameraParams({ x: camera.x + POSITION_INTERVAL });
+        moveOneStepInRelativeDirection(90);
         break;
       case "KeyQ":
         updateCameraParams({ y: camera.y - POSITION_INTERVAL });
@@ -135,4 +135,21 @@ function setupKeyListeners() {
         break;
     }
   });
+}
+
+function getPositionChange(angle, distance) {
+  const angleRadians = degreesToRadians(angle);
+  const x = Math.sin(angleRadians) * distance;
+  const z = -Math.cos(angleRadians) * distance;
+
+  return { x, z };
+}
+
+function moveOneStepInRelativeDirection(relativeAngle) {
+  updateCameraParams(
+    addCoordinates(
+      camera,
+      getPositionChange(camera.angleY + relativeAngle, POSITION_INTERVAL)
+    )
+  );
 }
