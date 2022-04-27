@@ -1,14 +1,10 @@
-let boxes = [
-  { x: 0, y: -1, z: 0 },
-  { x: 1, y: -1, z: -1, hue: 10 },
-  { x: 2, y: -1, z: -1, hue: 120 },
-  { x: 2, y: -2, z: -2, hue: 60 },
-  { x: 1, y: -2, z: -2, hue: 240 },
-];
+let boxes = [];
 
 let floor = { x: -5, z: -5, width: 10, length: 10 };
 
-let camera = { x: 1.5, y: -3, z: 5, angleX: -35, angleY: 0 };
+let camera = { x: 0, y: -6, z: 8.5, angleX: -35, angleY: 0 };
+let hue = 225;
+
 const POSITION_INTERVAL = 0.5;
 const ANGLE_INTERVAL = 5;
 const KEYDOWN_DEBOUNCE_MS = 200;
@@ -17,6 +13,7 @@ let lastHandledTimeByKey = {};
 window.onload = function () {
   updateCameraParams(camera);
   setupKeyListeners();
+  setupColorPickerListener();
   renderBoxes();
   renderFloor();
 };
@@ -66,6 +63,7 @@ function floorTileClick(event) {
     x: event.detail.x + floor.x,
     y: -1,
     z: event.detail.z + floor.z,
+    hue,
   };
   boxes.push(newBox);
   renderBoxes();
@@ -92,6 +90,7 @@ function getNewBoxProps(parentBox, side) {
         : side === "back"
         ? parentBox.z - 1
         : parentBox.z,
+    hue,
   };
 }
 
@@ -144,12 +143,24 @@ function setupKeyListeners() {
         updateCameraParams({ angleY: camera.angleY + ANGLE_INTERVAL });
         break;
       case "ArrowUp":
-        updateCameraParams({ angleX: camera.angleX + ANGLE_INTERVAL });
+        updateCameraParams({
+          angleX: constrainValue(-90, camera.angleX + ANGLE_INTERVAL, 90),
+        });
         break;
       case "ArrowDown":
-        updateCameraParams({ angleX: camera.angleX - ANGLE_INTERVAL });
+        updateCameraParams({
+          angleX: constrainValue(-90, camera.angleX - ANGLE_INTERVAL, 90),
+        });
         break;
     }
+  });
+}
+
+function setupColorPickerListener() {
+  const colorPickerElenent = document.getElementById("color-picker");
+  colorPickerElenent.addEventListener("color-picked", (event) => {
+    console.log("color picked: " + event.detail.hue);
+    hue = event.detail.hue;
   });
 }
 

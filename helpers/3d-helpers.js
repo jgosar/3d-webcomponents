@@ -23,10 +23,18 @@ function degreesToRadians(degrees) {
   return degrees * (Math.PI / 180);
 }
 
+function radiansToDegrees(radians) {
+  return radians * (180 / Math.PI);
+}
+
 function getPositionChange(angle, distance) {
   const angleRadians = degreesToRadians(angle);
   const x = Math.sin(angleRadians) * distance;
   const z = -Math.cos(angleRadians) * distance;
 
   return { x, z };
+}
+
+function constrainValue(min, value, max) {
+  return Math.min(Math.max(value, min), max);
 }

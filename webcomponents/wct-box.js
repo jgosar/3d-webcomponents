@@ -1,5 +1,5 @@
-const template = document.createElement("template");
-template.innerHTML = `
+const boxTemplate = document.createElement("template");
+boxTemplate.innerHTML = `
   <style>
 	html {
 	  transform-style: preserve-3d;
@@ -11,7 +11,7 @@ template.innerHTML = `
 	
 	.box {
 	  transform-style: preserve-3d;
-	  --hue: 290; 
+	  --hue: 225; 
 	}
 	
 	.box-side {
@@ -100,7 +100,7 @@ class WctBox extends HTMLElement {
 
     this.attachShadow({ mode: "open" });
 
-    this.shadowRoot.appendChild(template.content.cloneNode(true));
+    this.shadowRoot.appendChild(boxTemplate.content.cloneNode(true));
     this.createBoxSides();
     this.updateBoxDimensions({});
     this.updateBoxPosition({});

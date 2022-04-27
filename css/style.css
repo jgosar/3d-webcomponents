@@ -13,6 +13,12 @@ wct-floor {
   position: absolute;
 }
 
+wct-color-picker{
+  position: absolute;
+  right: 2.5vw;
+  bottom: 2.5vw;
+}
+
 .three-d-container {
   transform-style: preserve-3d;
   display: block;
