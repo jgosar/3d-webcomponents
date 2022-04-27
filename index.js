@@ -6,7 +6,7 @@ let boxes = [
   { x: 1, y: -2, z: -2, hue: 240 },
 ];
 
-let floor = { x: 0, z: 0, width: 5, length: 3 };
+let floor = { x: -5, z: -5, width: 10, length: 10 };
 
 let camera = { x: 1.5, y: -3, z: 5, angleX: -35, angleY: 0 };
 const POSITION_INTERVAL = 0.5;
@@ -62,7 +62,11 @@ function renderFloor() {
 }
 
 function floorTileClick(event) {
-  const newBox = { x: event.detail.x, y: -1, z: event.detail.z };
+  const newBox = {
+    x: event.detail.x + floor.x,
+    y: -1,
+    z: event.detail.z + floor.z,
+  };
   boxes.push(newBox);
   renderBoxes();
 }

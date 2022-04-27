@@ -24,6 +24,11 @@ wctFloorTemplate.innerHTML = `
       border: 1px solid black;
       box-sizing: border-box;
       display: inline-block;
+      opacity: 0.8;
+    }
+
+    .floor-tile:hover{
+      background-color: #ff3f00;
     }
   </style>
   <div class="floor" id="floor">
