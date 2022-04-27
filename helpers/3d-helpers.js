@@ -22,3 +22,11 @@ function negateCoordinates(position) {
 function degreesToRadians(degrees) {
   return degrees * (Math.PI / 180);
 }
+
+function getPositionChange(angle, distance) {
+  const angleRadians = degreesToRadians(angle);
+  const x = Math.sin(angleRadians) * distance;
+  const z = -Math.cos(angleRadians) * distance;
+
+  return { x, z };
+}

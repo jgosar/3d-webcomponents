@@ -8,9 +8,11 @@ let boxes = [
 
 let floor = { x: 0, z: 0, width: 5, length: 3 };
 
-let camera = { x: 1.5, y: -3, z: 5, angleX: 0, angleY: 0 };
-let POSITION_INTERVAL = 0.5;
-let ANGLE_INTERVAL = 5;
+let camera = { x: 1.5, y: -3, z: 5, angleX: -35, angleY: 0 };
+const POSITION_INTERVAL = 0.5;
+const ANGLE_INTERVAL = 5;
+const KEYDOWN_DEBOUNCE_MS = 200;
+let lastHandledTimeByKey = {};
 
 window.onload = function () {
   updateCameraParams(camera);
@@ -100,7 +102,17 @@ function updateCameraParams(changes) {
 }
 
 function setupKeyListeners() {
-  document.addEventListener("keyup", (e) => {
+  document.addEventListener("keydown", (e) => {
+    thisKeyPressTime = new Date().getTime();
+
+    if (
+      lastHandledTimeByKey[e.code] !== undefined &&
+      thisKeyPressTime - lastHandledTimeByKey[e.code] < KEYDOWN_DEBOUNCE_MS
+    ) {
+      return;
+    }
+
+    lastHandledTimeByKey[e.code] = thisKeyPressTime;
     switch (e.code) {
       case "KeyW":
         moveOneStepInRelativeDirection(0);
@@ -135,14 +147,6 @@ function setupKeyListeners() {
         break;
     }
   });
-}
-
-function getPositionChange(angle, distance) {
-  const angleRadians = degreesToRadians(angle);
-  const x = Math.sin(angleRadians) * distance;
-  const z = -Math.cos(angleRadians) * distance;
-
-  return { x, z };
 }
 
 function moveOneStepInRelativeDirection(relativeAngle) {
