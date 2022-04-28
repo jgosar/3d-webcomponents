@@ -69,7 +69,7 @@ class WctColorPicker extends HTMLElement {
     if (angleFromCentre < 0) {
       angleFromCentre += 360;
     }
-    this.emitColorPickedEvent(event, angleFromCentre);
+    this.emitColorPickedEvent(event, Math.round(angleFromCentre));
   }
 
   emitColorPickedEvent(event, hue) {

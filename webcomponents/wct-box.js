@@ -6,7 +6,7 @@ boxTemplate.innerHTML = `
 	}
 
   .animated {
-    transition: 0.5s;
+    transition: 0.5s linear;
   }
 	
 	.box {

@@ -11,6 +11,7 @@ const KEYDOWN_DEBOUNCE_MS = 200;
 let lastHandledTimeByKey = {};
 
 window.onload = function () {
+  loadBoxes();
   updateCameraParams(camera);
   setupKeyListeners();
   setupColorPickerListener();
@@ -33,6 +34,14 @@ function renderBoxes() {
   });
 }
 
+function saveBoxes() {
+  localStorage.setItem("3d-webcomponents_boxes", JSON.stringify(boxes));
+}
+
+function loadBoxes() {
+  boxes = JSON.parse(localStorage.getItem("3d-webcomponents_boxes")) || {};
+}
+
 function boxClick(box, event) {
   const action = event.detail.mouseButton === "left" ? "add" : "remove";
   if (action === "add") {
@@ -41,6 +50,7 @@ function boxClick(box, event) {
   } else {
     boxes = boxes.filter((arrayBox) => arrayBox !== box);
   }
+  saveBoxes();
   renderBoxes();
 }
 
@@ -66,6 +76,7 @@ function floorTileClick(event) {
     hue,
   };
   boxes.push(newBox);
+  saveBoxes();
   renderBoxes();
 }
 
