@@ -39,7 +39,7 @@ function saveBoxes() {
 }
 
 function loadBoxes() {
-  boxes = JSON.parse(localStorage.getItem("3d-webcomponents_boxes")) || {};
+  boxes = JSON.parse(localStorage.getItem("3d-webcomponents_boxes")) || [];
 }
 
 function boxClick(box, event) {
