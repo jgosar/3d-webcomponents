@@ -19,6 +19,17 @@ window.onload = function () {
   renderFloor();
 };
 
+////////////////////////////////Local storage////////////////////////////////
+function saveBoxes() {
+  localStorage.setItem("3d-webcomponents_boxes", JSON.stringify(boxes));
+}
+
+function loadBoxes() {
+  boxes = JSON.parse(localStorage.getItem("3d-webcomponents_boxes")) || [];
+}
+////////////////////////////////Local storage////////////////////////////////
+
+////////////////////////////////Create DOM from JSON////////////////////////////////
 function renderBoxes() {
   const boxesElement = document.getElementById("boxes");
   boxesElement.textContent = "";
@@ -32,26 +43,6 @@ function renderBoxes() {
     );
     boxesElement.appendChild(boxElement);
   });
-}
-
-function saveBoxes() {
-  localStorage.setItem("3d-webcomponents_boxes", JSON.stringify(boxes));
-}
-
-function loadBoxes() {
-  boxes = JSON.parse(localStorage.getItem("3d-webcomponents_boxes")) || [];
-}
-
-function boxClick(box, event) {
-  const action = event.detail.mouseButton === "left" ? "add" : "remove";
-  if (action === "add") {
-    const newBox = getNewBoxProps(box, event.detail.side);
-    boxes.push(newBox);
-  } else {
-    boxes = boxes.filter((arrayBox) => arrayBox !== box);
-  }
-  saveBoxes();
-  renderBoxes();
 }
 
 function renderFloor() {
@@ -68,6 +59,44 @@ function renderFloor() {
   sceneElement.appendChild(floorElement);
 }
 
+function updateCameraParams(changes) {
+  const sceneElement = document.getElementById("scene");
+  Object.entries(changes).forEach(([attrName, attrValue]) => {
+    if (["x", "y", "z", "angleX", "angleY"].includes(attrName)) {
+      camera[attrName] = attrValue;
+      sceneElement.setAttribute(`camera-${attrName}`, attrValue);
+    }
+  });
+}
+////////////////////////////////Create DOM from JSON////////////////////////////////
+
+////////////////////////////////Handle click events////////////////////////////////
+function boxClick(box, event) {
+  const action = event.detail.mouseButton === "left" ? "add" : "remove";
+  if (action === "add") {
+    const newBox = getNewBoxProps(box, event.detail.side);
+    boxes.push(newBox);
+  } else {
+    boxes = boxes.filter((arrayBox) => arrayBox !== box);
+  }
+  saveBoxes();
+  renderBoxes();
+}
+
+function getNewBoxProps(parentBox, side) {
+  const positionDiffBySide = {
+    right: { x: 1 },
+    left: { x: -1 },
+    bottom: { y: 1 },
+    top: { y: -1 },
+    front: { z: 1 },
+    back: { z: -1 },
+  };
+
+  const positionDiff = positionDiffBySide[side];
+  return { ...addCoordinates(parentBox, positionDiff), hue };
+}
+
 function floorTileClick(event) {
   const newBox = {
     x: event.detail.x + floor.x,
@@ -80,37 +109,27 @@ function floorTileClick(event) {
   renderBoxes();
 }
 
-function getNewBoxProps(parentBox, side) {
-  return {
-    ...parentBox,
-    x:
-      side === "right"
-        ? parentBox.x + 1
-        : side === "left"
-        ? parentBox.x - 1
-        : parentBox.x,
-    y:
-      side === "bottom"
-        ? parentBox.y + 1
-        : side === "top"
-        ? parentBox.y - 1
-        : parentBox.y,
-    z:
-      side === "front"
-        ? parentBox.z + 1
-        : side === "back"
-        ? parentBox.z - 1
-        : parentBox.z,
-    hue,
-  };
+function setupColorPickerListener() {
+  const colorPickerElenent = document.getElementById("color-picker");
+  colorPickerElenent.addEventListener("color-picked", (event) => {
+    console.log("color picked: " + event.detail.hue);
+    hue = event.detail.hue;
+  });
 }
+////////////////////////////////Handle click events////////////////////////////////
 
-function updateCameraParams(changes) {
-  const sceneElement = document.getElementById("scene");
-  Object.entries(changes).forEach(([attrName, attrValue]) => {
-    if (["x", "y", "z", "angleX", "angleY"].includes(attrName)) {
-      camera[attrName] = attrValue;
-      sceneElement.setAttribute(`camera-${attrName}`, attrValue);
+////////////////////////////////Keyboard events////////////////////////////////
+function setupKeyListeners() {
+  setInterval(handlePressedKeys, KEYDOWN_DEBOUNCE_MS);
+
+  document.addEventListener("keydown", (e) => {
+    if (!pressedKeys.includes(e.code)) {
+      pressedKeys = [...pressedKeys, e.code];
+    }
+  });
+  document.addEventListener("keyup", (e) => {
+    if (pressedKeys.includes(e.code)) {
+      pressedKeys = pressedKeys.filter((keyCode) => keyCode !== e.code);
     }
   });
 }
@@ -141,29 +160,6 @@ function handlePressedKeys() {
   pressedKeys.forEach((key) => keyHandlers[key]?.());
 }
 
-function setupKeyListeners() {
-  setInterval(handlePressedKeys, KEYDOWN_DEBOUNCE_MS);
-
-  document.addEventListener("keydown", (e) => {
-    if (!pressedKeys.includes(e.code)) {
-      pressedKeys = [...pressedKeys, e.code];
-    }
-  });
-  document.addEventListener("keyup", (e) => {
-    if (pressedKeys.includes(e.code)) {
-      pressedKeys = pressedKeys.filter((keyCode) => keyCode !== e.code);
-    }
-  });
-}
-
-function setupColorPickerListener() {
-  const colorPickerElenent = document.getElementById("color-picker");
-  colorPickerElenent.addEventListener("color-picked", (event) => {
-    console.log("color picked: " + event.detail.hue);
-    hue = event.detail.hue;
-  });
-}
-
 function moveOneStepInRelativeDirection(relativeAngle) {
   updateCameraParams(
     addCoordinates(
@@ -172,3 +168,4 @@ function moveOneStepInRelativeDirection(relativeAngle) {
     )
   );
 }
+////////////////////////////////Keyboard events////////////////////////////////
