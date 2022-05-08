@@ -8,7 +8,7 @@ let hue = 225;
 const POSITION_INTERVAL = 0.5;
 const ANGLE_INTERVAL = 5;
 const KEYDOWN_DEBOUNCE_MS = 200;
-let lastHandledTimeByKey = {};
+let pressedKeys = [];
 
 window.onload = function () {
   loadBoxes();
@@ -115,54 +115,43 @@ function updateCameraParams(changes) {
   });
 }
 
+function handlePressedKeys() {
+  const keyHandlers = {
+    KeyW: () => moveOneStepInRelativeDirection(0),
+    KeyS: () => moveOneStepInRelativeDirection(180),
+    KeyA: () => moveOneStepInRelativeDirection(270),
+    KeyD: () => moveOneStepInRelativeDirection(90),
+    KeyQ: () => updateCameraParams({ y: camera.y - POSITION_INTERVAL }),
+    KeyY: () => updateCameraParams({ y: camera.y + POSITION_INTERVAL }),
+    KeyZ: () => updateCameraParams({ y: camera.y + POSITION_INTERVAL }),
+    ArrowLeft: () =>
+      updateCameraParams({ angleY: camera.angleY - ANGLE_INTERVAL }),
+    ArrowRight: () =>
+      updateCameraParams({ angleY: camera.angleY + ANGLE_INTERVAL }),
+    ArrowUp: () =>
+      updateCameraParams({
+        angleX: constrainValue(-90, camera.angleX + ANGLE_INTERVAL, 90),
+      }),
+    ArrowDown: () =>
+      updateCameraParams({
+        angleX: constrainValue(-90, camera.angleX - ANGLE_INTERVAL, 90),
+      }),
+  };
+
+  pressedKeys.forEach((key) => keyHandlers[key]?.());
+}
+
 function setupKeyListeners() {
+  setInterval(handlePressedKeys, KEYDOWN_DEBOUNCE_MS);
+
   document.addEventListener("keydown", (e) => {
-    thisKeyPressTime = new Date().getTime();
-
-    if (
-      lastHandledTimeByKey[e.code] !== undefined &&
-      thisKeyPressTime - lastHandledTimeByKey[e.code] < KEYDOWN_DEBOUNCE_MS
-    ) {
-      return;
+    if (!pressedKeys.includes(e.code)) {
+      pressedKeys = [...pressedKeys, e.code];
     }
-
-    lastHandledTimeByKey[e.code] = thisKeyPressTime;
-    switch (e.code) {
-      case "KeyW":
-        moveOneStepInRelativeDirection(0);
-        break;
-      case "KeyS":
-        moveOneStepInRelativeDirection(180);
-        break;
-      case "KeyA":
-        moveOneStepInRelativeDirection(270);
-        break;
-      case "KeyD":
-        moveOneStepInRelativeDirection(90);
-        break;
-      case "KeyQ":
-        updateCameraParams({ y: camera.y - POSITION_INTERVAL });
-        break;
-      case "KeyY":
-      case "KeyZ":
-        updateCameraParams({ y: camera.y + POSITION_INTERVAL });
-        break;
-      case "ArrowLeft":
-        updateCameraParams({ angleY: camera.angleY - ANGLE_INTERVAL });
-        break;
-      case "ArrowRight":
-        updateCameraParams({ angleY: camera.angleY + ANGLE_INTERVAL });
-        break;
-      case "ArrowUp":
-        updateCameraParams({
-          angleX: constrainValue(-90, camera.angleX + ANGLE_INTERVAL, 90),
-        });
-        break;
-      case "ArrowDown":
-        updateCameraParams({
-          angleX: constrainValue(-90, camera.angleX - ANGLE_INTERVAL, 90),
-        });
-        break;
+  });
+  document.addEventListener("keyup", (e) => {
+    if (pressedKeys.includes(e.code)) {
+      pressedKeys = pressedKeys.filter((keyCode) => keyCode !== e.code);
     }
   });
 }

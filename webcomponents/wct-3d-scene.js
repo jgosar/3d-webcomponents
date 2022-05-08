@@ -23,7 +23,7 @@ wct3dSceneTemplate.innerHTML = `
 		}
 
 		.animated {
-		  transition: 0.5s linear;
+		  transition: 0.2s linear;
 		}
 
 		.translated-to-screen-centre {
