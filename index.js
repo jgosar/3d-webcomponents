@@ -98,7 +98,7 @@ function getNewBoxProps(parentBox, side) {
   };
 
   const positionDiff = positionDiffBySide[side];
-  return { ...addCoordinates(parentBox, positionDiff), hue };
+  return { ...addCoordinates(parentBox, positionDiff), hue: appState.hue };
 }
 
 function floorTileClick(event) {
@@ -106,7 +106,7 @@ function floorTileClick(event) {
     x: event.detail.x + appState.floor.x,
     y: -1,
     z: event.detail.z + appState.floor.z,
-    hue,
+    hue: appState.hue,
   };
   appState.boxes.push(newBox);
   saveBoxes();
@@ -117,7 +117,7 @@ function setupColorPickerListener() {
   const colorPickerElenent = document.getElementById("color-picker");
   colorPickerElenent.addEventListener("color-picked", (event) => {
     console.log("color picked: " + event.detail.hue);
-    hue = event.detail.hue;
+    appState.hue = event.detail.hue;
   });
 }
 ////////////////////////////////Handle click events////////////////////////////////
